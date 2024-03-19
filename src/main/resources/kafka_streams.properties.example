@@ -1,0 +1,13 @@
+# Required connection configs for Kafka producer, consumer, and admin
+
+# Kafka Streams Properties
+transactional.id=sample-kafka-demo-transaction-merger
+application.id=transactional-merger
+
+# Just some minor improvements
+num.stream.threads=5
+processing.guarantee=exactly_once
+replication.factor=3
+
+# once there is more than one application...
+# num.standby.replicas=1

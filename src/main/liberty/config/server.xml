@@ -37,7 +37,7 @@
     <applicationManager autoExpand="true"/>
 
     <!-- Configures the application on a specified context root -->
-    <webApplication contextRoot="/" location="kafka-demo.war" />
+    <webApplication contextRoot="/kafka-demo" location="kafka-demo.war" />
 
     <library id="postgresql-library">
         <fileset dir="jdbc" includes="*.jar"/>

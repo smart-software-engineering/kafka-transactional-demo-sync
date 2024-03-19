@@ -61,10 +61,13 @@ public class DbSender {
 
         try (Connection c = dataSource.getConnection();
              Statement st = c.createStatement();
-             ResultSet rs = st.executeQuery("select kafka from queue")) {
+             PreparedStatement ps = c.prepareStatement("delete from queue where id = ?");
+             ResultSet rs = st.executeQuery("select id, kafka from queue")) {
             ArrayList<Future<RecordMetadata>> futures = new ArrayList<>();
             while (rs.next()) {
-                futures.add(producer.send(new ProducerRecord<>(REAL_TOPIC, null, rs.getString(1))));
+                futures.add(producer.send(new ProducerRecord<>(REAL_TOPIC, transactionSynchronizationRegistry.getTransactionKey().toString(), rs.getString(2))));
+                ps.setInt(1, rs.getInt(1));
+                ps.execute();
             }
             return futures.stream()
                     .map(f -> {
@@ -93,6 +96,18 @@ public class DbSender {
             return fact;
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public List<String> allQuotes() throws SQLException {
+        try (Connection c = dataSource.getConnection();
+             Statement st = c.createStatement();
+             ResultSet rs = st.executeQuery("select kafka from queue order by id")) {
+            ArrayList<String> quotes = new ArrayList<>();
+            while (rs.next()) {
+                quotes.add(rs.getString(1));
+            }
+            return quotes;
         }
     }
 }

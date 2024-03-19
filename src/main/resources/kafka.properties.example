@@ -1,0 +1,7 @@
+# Required connection configs for Kafka producer, consumer, and admin
+
+# Best practice for Kafka producer to prevent data loss
+acks=all
+
+# Idempotency
+enable.idempotence=true

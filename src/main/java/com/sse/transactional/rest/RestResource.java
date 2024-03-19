@@ -6,6 +6,8 @@ import jakarta.json.JsonObject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
+
+import java.sql.SQLException;
 import java.util.List;
 
 @Path("")
@@ -16,10 +18,10 @@ public class RestResource {
     private DbSender dbSender;
 
     @GET
-    @Path("/count")
+    @Path("/stats")
     @Produces("application/json")
-    public int count() {
-        return transactionalListener.counter();
+    public Stats stats() throws SQLException {
+        return new Stats(transactionalListener.counter(), dbSender.allQuotes());
     }
 
     @GET
